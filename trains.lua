@@ -53,7 +53,7 @@ local function draw()
 			if remaining_time > 120 then
 				remaining_time_str = math.floor(remaining_time/60).." Minuten"
 			elseif remaining_time >60 then
-				remaining_time_str = "eine Minute ("..remaining_time
+				remaining_time_str = "eine Minute"
 				critical = true
 			else
 				remaining_time_str = math.floor(remaining_time).." Sekunden"
