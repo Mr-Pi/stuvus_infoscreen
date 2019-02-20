@@ -7,13 +7,25 @@ local bus_logo = resource.load_image("bus.png")
 
 local function draw_logo()
 	local x = 50
-	local y = 370
+	local y = 290
 	vvs_logo:draw(x, y, x+80, y+76)
 	font_sans:write(80+50+20, y+26, "Abfahrten", 50, 0, 0, 0, 1)
 end
 
+local function print_striped(x, y, max_x, text, size, r, g, b, trans)
+	if font_sans:width(text, size)+x <= max_x then
+		font_sans:write(x, y, text, size, r, g, b, trans)
+	else
+		local c = text:len()
+		while font_sans:width(text:sub(0,c).."...", size)+x > max_x and c > 0 do
+			c = c-1
+		end
+		font_sans:write(x, y, text:sub(0,c).."...", size, r, g, b, trans)
+	end
+end
+
 local function print_departure(i, line, destination, departure, critical)
-	local y = i*80 + 500
+	local y = i*80 + 410
 	local r = 0
 	local g = 0
 	local b = 0
@@ -29,7 +41,7 @@ local function print_departure(i, line, destination, departure, critical)
 		util.draw_correct(bus_logo, 50, y, 50+60, y+60)
 	end
 	local w = font_mono:write(120, y+3, line, 60, r, g, b, trans)
-	font_sans:write(120 + w + 10, y, destination, 30, r, g, b, trans)
+	print_striped(120 + w + 10, y, 500, destination, 30, r, g, b, trans)
 	font_sans:write(120 + w + 10, y+30, departure, 30, r, g, b, trans)
 	return y+80
 end
@@ -46,7 +58,7 @@ local function draw()
 	local i = 0
 	for _, departure in ipairs(departures) do
 		local remaining_time = departure.departureTime.timestamp-clock.get_timestamp()
-		if i < 7 and remaining_time > 0 then
+		if i < 8 and remaining_time > 0 then
 			local remaining_time_str = ""
 			local critical = false
 
@@ -56,7 +68,7 @@ local function draw()
 				remaining_time_str = "eine Minute"
 				critical = true
 			else
-				remaining_time_str = math.floor(remaining_time).." Sekunden"
+				remaining_time_str = "wenige Sekunden"
 				critical = true
 			end
 
