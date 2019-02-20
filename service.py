@@ -21,14 +21,13 @@ def send_time():
     print(timestamp)
     udp.sendto(bytes('stuvus/clock/set:%f:32' % timestamp, 'ASCII'), DEST_HOST)
 
-if __name__ == "__main__":
-    timer_send_time = threading.Timer(10, send_time)
-#    timer_send_time.start()
-    departures = urllib.request.urlopen("https://efa-api.asw.io/api/v1/station/5006008/departures/").read().decode("utf-8")
+def get_departures(station_id):
+    departures = urllib.request.urlopen("https://efa-api.asw.io/api/v1/station/{}/departures/".format(station_id)).read().decode("utf-8")
     departures = json.loads(departures)
     new_departures = []
-    for i in range(0,10):
-        departure = departures[i]
+    for departure in departures:
+        if departure["direction"] == "Universität (Schleife)":
+            continue
         departure["departureTime"]["timestamp"] = datetime(
                 int(departure["departureTime"]["year"]),
                 int(departure["departureTime"]["month"]),
@@ -37,14 +36,22 @@ if __name__ == "__main__":
                 int(departure["departureTime"]["minute"])
                 ).timestamp() + localtz.utcoffset(datetime.now()).total_seconds()
         new_departures.append(departure)
-    print(new_departures)
+    new_departures.sort(key = lambda x: x['departureTime']['timestamp'])
+    return new_departures
+
+if __name__ == "__main__":
+#    timer_send_time = threading.Timer(10, send_time)
+#    timer_send_time.start()
+    departures = []
+    departures.extend( get_departures('5006008') )  # Universität
+    departures.extend( get_departures('5006021') )  # Universität (Schleife)
+    departures.sort(key = lambda x: x['departureTime']['timestamp'])
+    print(json.dumps(departures))
     tcp.connect(DEST_HOST)
     okay=tcp.recv(400)
-    print(okay)
     tcp.send("stuvus\n".encode())
     okay=tcp.recv(100)
-    print(okay)
-    tcp.send(json.dumps(new_departures).encode()+'\n'.encode())
+    tcp.send(json.dumps(departures).encode('utf-8')+'\n'.encode('utf-8'))
     tcp.close()
     send_time()
 #    signal.pause()
