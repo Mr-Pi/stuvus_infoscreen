@@ -10,14 +10,16 @@ local function get_timestamp()
 end
 
 local function print_time()
+	local size = 450
+	local width = size/2
 	local now = get_timestamp()
 	local h = string.format('%2d', (now/3600)%24)
 	local m = string.format('%02d', now%3600/60)
-	font:write(1920-60*5-50+20, 50, h, 100, 0, 0, 0, 1)
-	font:write(1920-60*2-50, 50, m, 100, 0, 0, 0, 1)
+	font:write(1680-width*2-150, 25, m, size, 0, 0, 0, 0.5)
 	if view_dot then
-		font:write(1920-60*3-50+10, 45, ":", 100, 0, 0, 0, 1)
+		font:write(1680-width*3-100, -20, ":", size, 0, 0, 0, 0.5)
 	end
+	font:write(1680-width*5-100, 25, h, size, 0, 0, 0, 0.5)
 end
 
 local function change_view_dot()
