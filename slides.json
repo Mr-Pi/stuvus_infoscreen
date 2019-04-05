@@ -1,0 +1,12 @@
+[
+	{"showtime": 15, "elements": [
+		{"type": "header", "text": "Die IT schafft"},
+		{"y": 250, "type": "img", "src": "test_bg.png", "align": "center"},
+		{"y": 266, "type": "img", "src": "test.png", "align": "center"},
+		{"type": "text", "text": "Commit activity", "x": 852, "y": 371, "size": 12}
+	]},
+	{"showtime": 30, "elements": [
+		{"type": "header", "text": "Das Wetter"},
+		{"x": 0, "y": 200, "type": "img", "src": "meteogram.png", "align": "center"}
+	]}
+]
