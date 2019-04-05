@@ -7,6 +7,7 @@ import threading
 import signal
 import urllib.request
 import json
+import os
 
 udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -54,4 +55,5 @@ if __name__ == "__main__":
     tcp.send(json.dumps(departures).encode('utf-8')+'\n'.encode('utf-8'))
     tcp.close()
     send_time()
+    os.system('wget -O /home/pi/stuvus/meteogram.png https://www.yr.no/place/Germany/Baden-W%C3%BCrttemberg/Universit%C3%A4t_Stuttgart_Campus_Vaihingen/meteogram.png')
 #    signal.pause()
